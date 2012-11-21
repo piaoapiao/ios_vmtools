@@ -78,22 +78,20 @@ int main(int argc, char **argv)
 
     printf("[  idx] address-range          size  perm/max     behavior  sharing\n");
     vmForEachRegion(task, ^bool(vm_region_basic_info_data_t *info, vm_address_t address, vm_size_t vmsize) {
-        if (info->max_protection & VM_PROT_EXECUTE) {
-            printf("[ %4u] ", n);
-            printf("%08x-%08x %8uK  %c%c%c/%c%c%c  %11s   %6s  %10s\n",
-                (unsigned int)address, (unsigned int)(address + vmsize), (unsigned int)(vmsize >> 10),
-                (info->protection & VM_PROT_READ)        ? 'r' : '-',
-                (info->protection & VM_PROT_WRITE)       ? 'w' : '-',
-                (info->protection & VM_PROT_EXECUTE)     ? 'x' : '-',
-                (info->max_protection & VM_PROT_READ)    ? 'r' : '-',
-                (info->max_protection & VM_PROT_WRITE)   ? 'w' : '-',
-                (info->max_protection & VM_PROT_EXECUTE) ? 'x' : '-',
-                (info->inheritance < MAX_INHERITANCE)? inheritanceStrings[info->inheritance] : "unk",
-                (info->shared)? "shared" : "private",
-                (((unsigned int) info->behavior) < MAX_BEHAVIOR)? behaviorStrings[info->behavior] : "unk");
+        printf("[ %4u] ", n);
+        printf("%08x-%08x %8uK  %c%c%c/%c%c%c  %11s   %6s  %10s\n",
+            (unsigned int)address, (unsigned int)(address + vmsize), (unsigned int)(vmsize >> 10),
+            (info->protection & VM_PROT_READ)        ? 'r' : '-',
+            (info->protection & VM_PROT_WRITE)       ? 'w' : '-',
+            (info->protection & VM_PROT_EXECUTE)     ? 'x' : '-',
+            (info->max_protection & VM_PROT_READ)    ? 'r' : '-',
+            (info->max_protection & VM_PROT_WRITE)   ? 'w' : '-',
+            (info->max_protection & VM_PROT_EXECUTE) ? 'x' : '-',
+            (info->inheritance < MAX_INHERITANCE)? inheritanceStrings[info->inheritance] : "unk",
+            (info->shared)? "shared" : "private",
+            (((unsigned int) info->behavior) < MAX_BEHAVIOR)? behaviorStrings[info->behavior] : "unk");
 
-            n++;
-        }
+        n++;
         return true;
     });    
     printf("Found %d regions\n", n);
